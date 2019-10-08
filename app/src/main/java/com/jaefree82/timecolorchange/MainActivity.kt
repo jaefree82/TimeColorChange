@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private fun setTimeView() {
         currentTimestamp = System.currentTimeMillis()
 
-        Observable.interval(1, TimeUnit.SECONDS)
+        Observable.interval(0,1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
