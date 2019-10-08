@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
 
         btnChangeColor.setOnClickListener {
             isEvenOdd = !isEvenOdd
-            Toast.makeText(this, isEvenOdd.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
