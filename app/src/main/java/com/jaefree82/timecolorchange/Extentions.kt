@@ -1,6 +1,5 @@
 package com.jaefree82.timecolorchange
 
-import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.*
 
