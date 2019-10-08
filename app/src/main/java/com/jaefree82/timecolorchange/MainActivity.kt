@@ -8,10 +8,8 @@ import com.orhanobut.logger.Logger
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import org.reactivestreams.Subscription
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -24,8 +22,6 @@ class MainActivity : AppCompatActivity() {
     private val disposables by lazy {
         CompositeDisposable()
     }
-
-    private lateinit var disposable: Disposable
 
     private var evenColor = RED_COLOR
     private var oddColor = BLUE_COLOR
@@ -47,17 +43,19 @@ class MainActivity : AppCompatActivity() {
     private fun setTimeView() {
         currentTimestamp = System.currentTimeMillis()
 
-        disposable = Observable.interval(1, TimeUnit.SECONDS)
+        Observable.interval(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe {
                 Logger.i("interval: $it")
                 currentTimestamp += 1000
                 evenColor = if (isEvenOdd) RED_COLOR else BLUE_COLOR
-                oddColor = if (!isEvenOdd) BLUE_COLOR else RED_COLOR
+                oddColor = if (isEvenOdd) BLUE_COLOR else RED_COLOR
                 tvTime.apply {
                     text = currentTimestamp.toDateFormat()
-                    setTextColor(Color.parseColor(if (isEvenOdd) evenColor else oddColor))
+                    setTextColor(Color.parseColor(
+                        if (currentTimestamp.getTimeEvenOddNum() == 0) evenColor else oddColor)
+                    )
                 }
             }.apply { disposables.add(this) }
 
@@ -69,11 +67,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        disposable.dispose()
-    }
-
-    override fun onDestroy() {
         disposables.clear()
-        super.onDestroy()
     }
 }
